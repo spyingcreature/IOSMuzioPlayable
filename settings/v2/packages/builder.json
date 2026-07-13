@@ -1,0 +1,10 @@
+{
+  "__version__": "1.3.9",
+  "splash-setting": {
+    "logo": {
+      "image": "project://settings/SAVE_20260710_164732.jpg",
+      "type": "custom"
+    },
+    "displayRatio": 2
+  }
+}
