@@ -1,0 +1,729 @@
+[
+  {
+    "id": "loadingProgressFill",
+    "mode": "sequence",
+    "next": "auto",
+    "actions": [
+      {
+        "type": "call",
+        "target": "audioManager",
+        "component": "AudioManager",
+        "method": "playSfx",
+        "args": ["rise"]
+      },
+      {
+        "type": "call",
+        "target": "loadingProgress",
+        "component": "SpriteFillProgressDisplay",
+        "method": "animateProgressTo",
+        "args": [1, 0.8, "sineInOut", 0]
+      }
+    ]
+  },
+  {
+    "id": "loadingCompletePopOutIn",
+    "mode": "sequence",
+    "next": "auto",
+    "actions": [
+      {
+        "type": "call",
+        "target": "loadingProgressPop",
+        "component": "NodePopInOut",
+        "method": "popOut",
+        "args": [true]
+      },
+      {
+        "type": "call",
+        "target": "audioManager",
+        "component": "AudioManager",
+        "method": "playSfx",
+        "args": ["done"]
+      },
+      {
+        "type": "call",
+        "target": "loadingComplete",
+        "component": "NodePopInOut",
+        "method": "popIn",
+        "args": [true]
+      },
+      {
+        "type": "wait",
+        "duration": 0.3
+      }
+    ]
+  },
+  {
+    "id": "loadingToMoodFade",
+    "mode": "sequence",
+    "next": "auto",
+    "actions": [
+      {
+        "type": "sequence",
+        "actions": [
+          {
+            "type": "call",
+            "target": "loading1",
+            "component": "NodeFadeAnimator",
+            "method": "fadeOut",
+            "args": [0.35, "sineOut", 1]
+          },
+          {
+            "type": "enable",
+            "target": "loading1",
+            "value": false
+          }
+        ]
+      },
+      {
+        "type": "sequence",
+        "actions": [
+          {
+            "type": "enable",
+            "target": "selectMood",
+            "value": true
+          },
+          {
+            "type": "call",
+            "target": "selectMood",
+            "component": "NodeFadeAnimator",
+            "method": "fadeIn",
+            "args": [0.35, "sineOut", 0]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "showMoodTitleAndWaitTrigger",
+    "mode": "sequence",
+    "next": "wait",
+    "actions": [
+      {
+        "type": "call",
+        "target": "audioManager",
+        "component": "AudioManager",
+        "method": "playSfx",
+        "args": ["pop"]
+      },
+      {
+        "type": "call",
+        "target": "selectMoodTitle",
+        "component": "NodePopInOut",
+        "method": "popIn",
+        "args": [true]
+      }
+    ]
+  },
+  {
+    "id": "happyPath",
+    "mode": "sequence",
+    "next": "auto",
+    "actions": [
+      {
+        "type": "call",
+        "target": "audioManager",
+        "component": "AudioManager",
+        "method": "playSfx",
+        "args": ["select"]
+      },
+      {
+        "type": "call",
+        "target": "audioManager",
+        "component": "AudioManager",
+        "method": "playSfx",
+        "args": ["pop"]
+      },
+      {
+        "type": "call",
+        "target": "selectMoodTitle",
+        "component": "NodePopInOut",
+        "method": "popOut",
+        "args": [true]
+      },
+      {
+        "type": "call",
+        "target": "selectMood",
+        "component": "NodeFadeAnimator",
+        "method": "fadeOut",
+        "args": [0.35, "sineOut", 1]
+      },
+      {
+        "type": "enable",
+        "target": "selectMood",
+        "value": false
+      },
+      {
+        "type": "enable",
+        "target": "loading1",
+        "value": true
+      },
+      {
+        "type": "call",
+        "target": "loading1",
+        "component": "NodeFadeAnimator",
+        "method": "fadeIn",
+        "args": [0.35, "sineOut", 0]
+      },
+      {
+        "type": "call",
+        "target": "loadingComplete",
+        "component": "NodePopInOut",
+        "method": "snapOut",
+        "args": []
+      },
+      {
+        "type": "call",
+        "target": "loadingProgressPop",
+        "component": "NodePopInOut",
+        "method": "snapIn",
+        "args": []
+      },
+      {
+        "type": "call",
+        "target": "loadingProgress",
+        "component": "SpriteFillProgressDisplay",
+        "method": "setProgress",
+        "args": [0]
+      },
+      {
+        "type": "call",
+        "target": "audioManager",
+        "component": "AudioManager",
+        "method": "playSfx",
+        "args": ["rise"]
+      },
+      {
+        "type": "call",
+        "target": "loadingProgress",
+        "component": "SpriteFillProgressDisplay",
+        "method": "animateProgressTo",
+        "args": [1, 0.8, "sineInOut", 0]
+      },
+      {
+        "type": "call",
+        "target": "audioManager",
+        "component": "AudioManager",
+        "method": "playSfx",
+        "args": ["pop"]
+      },
+      {
+        "type": "call",
+        "target": "loadingProgressPop",
+        "component": "NodePopInOut",
+        "method": "popOut",
+        "args": [true]
+      },
+      {
+        "type": "call",
+        "target": "audioManager",
+        "component": "AudioManager",
+        "method": "playSfx",
+        "args": ["done"]
+      },
+      {
+        "type": "call",
+        "target": "loadingComplete",
+        "component": "NodePopInOut",
+        "method": "popIn",
+        "args": [true]
+      },
+      {
+        "type": "wait",
+        "duration": 0.3
+      },
+      {
+        "type": "call",
+        "target": "loading1",
+        "component": "NodeFadeAnimator",
+        "method": "fadeOut",
+        "args": [0.35, "sineOut", 1]
+      },
+      {
+        "type": "enable",
+        "target": "loading1",
+        "value": false
+      },
+      {
+        "type": "enable",
+        "target": "happyPanel",
+        "value": true
+      },
+      {
+        "type": "call",
+        "target": "happyPanel",
+        "component": "NodeFadeAnimator",
+        "method": "fadeIn",
+        "args": [0.35, "sineOut", 0]
+      },
+      {
+        "type": "fire",
+        "event": "scenario:goto",
+        "data": "waitBeforeEndPanel"
+      }
+    ]
+  },
+  {
+    "id": "chillPath",
+    "mode": "sequence",
+    "next": "auto",
+    "actions": [
+      {
+        "type": "call",
+        "target": "audioManager",
+        "component": "AudioManager",
+        "method": "playSfx",
+        "args": ["select"]
+      },
+      {
+        "type": "call",
+        "target": "audioManager",
+        "component": "AudioManager",
+        "method": "playSfx",
+        "args": ["pop"]
+      },
+      {
+        "type": "call",
+        "target": "selectMoodTitle",
+        "component": "NodePopInOut",
+        "method": "popOut",
+        "args": [true]
+      },
+      {
+        "type": "call",
+        "target": "selectMood",
+        "component": "NodeFadeAnimator",
+        "method": "fadeOut",
+        "args": [0.35, "sineOut", 1]
+      },
+      {
+        "type": "enable",
+        "target": "selectMood",
+        "value": false
+      },
+      {
+        "type": "enable",
+        "target": "loading1",
+        "value": true
+      },
+      {
+        "type": "call",
+        "target": "loading1",
+        "component": "NodeFadeAnimator",
+        "method": "fadeIn",
+        "args": [0.35, "sineOut", 0]
+      },
+      {
+        "type": "call",
+        "target": "loadingComplete",
+        "component": "NodePopInOut",
+        "method": "snapOut",
+        "args": []
+      },
+      {
+        "type": "call",
+        "target": "loadingProgressPop",
+        "component": "NodePopInOut",
+        "method": "snapIn",
+        "args": []
+      },
+      {
+        "type": "call",
+        "target": "loadingProgress",
+        "component": "SpriteFillProgressDisplay",
+        "method": "setProgress",
+        "args": [0]
+      },
+      {
+        "type": "call",
+        "target": "audioManager",
+        "component": "AudioManager",
+        "method": "playSfx",
+        "args": ["rise"]
+      },
+      {
+        "type": "call",
+        "target": "loadingProgress",
+        "component": "SpriteFillProgressDisplay",
+        "method": "animateProgressTo",
+        "args": [1, 0.8, "sineInOut", 0]
+      },
+      {
+        "type": "call",
+        "target": "audioManager",
+        "component": "AudioManager",
+        "method": "playSfx",
+        "args": ["pop"]
+      },
+      {
+        "type": "call",
+        "target": "loadingProgressPop",
+        "component": "NodePopInOut",
+        "method": "popOut",
+        "args": [true]
+      },
+      {
+        "type": "call",
+        "target": "audioManager",
+        "component": "AudioManager",
+        "method": "playSfx",
+        "args": ["done"]
+      },
+      {
+        "type": "call",
+        "target": "loadingComplete",
+        "component": "NodePopInOut",
+        "method": "popIn",
+        "args": [true]
+      },
+      {
+        "type": "wait",
+        "duration": 0.3
+      },
+      {
+        "type": "call",
+        "target": "loading1",
+        "component": "NodeFadeAnimator",
+        "method": "fadeOut",
+        "args": [0.35, "sineOut", 1]
+      },
+      {
+        "type": "enable",
+        "target": "loading1",
+        "value": false
+      },
+      {
+        "type": "enable",
+        "target": "chillPanel",
+        "value": true
+      },
+      {
+        "type": "call",
+        "target": "chillPanel",
+        "component": "NodeFadeAnimator",
+        "method": "fadeIn",
+        "args": [0.35, "sineOut", 0]
+      },
+      {
+        "type": "fire",
+        "event": "scenario:goto",
+        "data": "waitBeforeEndPanel"
+      }
+    ]
+  },
+  {
+    "id": "energeticPath",
+    "mode": "sequence",
+    "next": "auto",
+    "actions": [
+      {
+        "type": "call",
+        "target": "audioManager",
+        "component": "AudioManager",
+        "method": "playSfx",
+        "args": ["select"]
+      },
+      {
+        "type": "call",
+        "target": "audioManager",
+        "component": "AudioManager",
+        "method": "playSfx",
+        "args": ["pop"]
+      },
+      {
+        "type": "call",
+        "target": "selectMoodTitle",
+        "component": "NodePopInOut",
+        "method": "popOut",
+        "args": [true]
+      },
+      {
+        "type": "call",
+        "target": "selectMood",
+        "component": "NodeFadeAnimator",
+        "method": "fadeOut",
+        "args": [0.35, "sineOut", 1]
+      },
+      {
+        "type": "enable",
+        "target": "selectMood",
+        "value": false
+      },
+      {
+        "type": "enable",
+        "target": "loading1",
+        "value": true
+      },
+      {
+        "type": "call",
+        "target": "loading1",
+        "component": "NodeFadeAnimator",
+        "method": "fadeIn",
+        "args": [0.35, "sineOut", 0]
+      },
+      {
+        "type": "call",
+        "target": "loadingComplete",
+        "component": "NodePopInOut",
+        "method": "snapOut",
+        "args": []
+      },
+      {
+        "type": "call",
+        "target": "loadingProgressPop",
+        "component": "NodePopInOut",
+        "method": "snapIn",
+        "args": []
+      },
+      {
+        "type": "call",
+        "target": "loadingProgress",
+        "component": "SpriteFillProgressDisplay",
+        "method": "setProgress",
+        "args": [0]
+      },
+      {
+        "type": "call",
+        "target": "audioManager",
+        "component": "AudioManager",
+        "method": "playSfx",
+        "args": ["rise"]
+      },
+      {
+        "type": "call",
+        "target": "loadingProgress",
+        "component": "SpriteFillProgressDisplay",
+        "method": "animateProgressTo",
+        "args": [1, 0.8, "sineInOut", 0]
+      },
+      {
+        "type": "call",
+        "target": "audioManager",
+        "component": "AudioManager",
+        "method": "playSfx",
+        "args": ["pop"]
+      },
+      {
+        "type": "call",
+        "target": "loadingProgressPop",
+        "component": "NodePopInOut",
+        "method": "popOut",
+        "args": [true]
+      },
+      {
+        "type": "call",
+        "target": "audioManager",
+        "component": "AudioManager",
+        "method": "playSfx",
+        "args": ["done"]
+      },
+      {
+        "type": "call",
+        "target": "loadingComplete",
+        "component": "NodePopInOut",
+        "method": "popIn",
+        "args": [true]
+      },
+      {
+        "type": "wait",
+        "duration": 0.3
+      },
+      {
+        "type": "call",
+        "target": "loading1",
+        "component": "NodeFadeAnimator",
+        "method": "fadeOut",
+        "args": [0.35, "sineOut", 1]
+      },
+      {
+        "type": "enable",
+        "target": "loading1",
+        "value": false
+      },
+      {
+        "type": "enable",
+        "target": "energeticPanel",
+        "value": true
+      },
+      {
+        "type": "call",
+        "target": "energeticPanel",
+        "component": "NodeFadeAnimator",
+        "method": "fadeIn",
+        "args": [0.35, "sineOut", 0]
+      },
+      {
+        "type": "fire",
+        "event": "scenario:goto",
+        "data": "waitBeforeEndPanel"
+      }
+    ]
+  },
+  {
+    "id": "focusPath",
+    "mode": "sequence",
+    "next": "auto",
+    "actions": [
+      {
+        "type": "call",
+        "target": "audioManager",
+        "component": "AudioManager",
+        "method": "playSfx",
+        "args": ["select"]
+      },
+      {
+        "type": "call",
+        "target": "audioManager",
+        "component": "AudioManager",
+        "method": "playSfx",
+        "args": ["pop"]
+      },
+      {
+        "type": "call",
+        "target": "selectMoodTitle",
+        "component": "NodePopInOut",
+        "method": "popOut",
+        "args": [true]
+      },
+      {
+        "type": "call",
+        "target": "selectMood",
+        "component": "NodeFadeAnimator",
+        "method": "fadeOut",
+        "args": [0.35, "sineOut", 1]
+      },
+      {
+        "type": "enable",
+        "target": "selectMood",
+        "value": false
+      },
+      {
+        "type": "enable",
+        "target": "loading1",
+        "value": true
+      },
+      {
+        "type": "call",
+        "target": "loading1",
+        "component": "NodeFadeAnimator",
+        "method": "fadeIn",
+        "args": [0.35, "sineOut", 0]
+      },
+      {
+        "type": "call",
+        "target": "loadingComplete",
+        "component": "NodePopInOut",
+        "method": "snapOut",
+        "args": []
+      },
+      {
+        "type": "call",
+        "target": "loadingProgressPop",
+        "component": "NodePopInOut",
+        "method": "snapIn",
+        "args": []
+      },
+      {
+        "type": "call",
+        "target": "loadingProgress",
+        "component": "SpriteFillProgressDisplay",
+        "method": "setProgress",
+        "args": [0]
+      },
+      {
+        "type": "call",
+        "target": "audioManager",
+        "component": "AudioManager",
+        "method": "playSfx",
+        "args": ["rise"]
+      },
+      {
+        "type": "call",
+        "target": "loadingProgress",
+        "component": "SpriteFillProgressDisplay",
+        "method": "animateProgressTo",
+        "args": [1, 0.8, "sineInOut", 0]
+      },
+      {
+        "type": "call",
+        "target": "audioManager",
+        "component": "AudioManager",
+        "method": "playSfx",
+        "args": ["pop"]
+      },
+      {
+        "type": "call",
+        "target": "loadingProgressPop",
+        "component": "NodePopInOut",
+        "method": "popOut",
+        "args": [true]
+      },
+      {
+        "type": "call",
+        "target": "audioManager",
+        "component": "AudioManager",
+        "method": "playSfx",
+        "args": ["done"]
+      },
+      {
+        "type": "call",
+        "target": "loadingComplete",
+        "component": "NodePopInOut",
+        "method": "popIn",
+        "args": [true]
+      },
+      {
+        "type": "wait",
+        "duration": 0.3
+      },
+      {
+        "type": "call",
+        "target": "loading1",
+        "component": "NodeFadeAnimator",
+        "method": "fadeOut",
+        "args": [0.35, "sineOut", 1]
+      },
+      {
+        "type": "enable",
+        "target": "loading1",
+        "value": false
+      },
+      {
+        "type": "enable",
+        "target": "focusPanel",
+        "value": true
+      },
+      {
+        "type": "call",
+        "target": "focusPanel",
+        "component": "NodeFadeAnimator",
+        "method": "fadeIn",
+        "args": [0.35, "sineOut", 0]
+      },
+      {
+        "type": "fire",
+        "event": "scenario:goto",
+        "data": "waitBeforeEndPanel"
+      }
+    ]
+  },
+  {
+    "id": "waitBeforeEndPanel",
+    "mode": "sequence",
+    "next": "wait",
+    "actions": []
+  },
+  {
+    "id": "revealEndPanel",
+    "mode": "sequence",
+    "next": "auto",
+    "actions": [
+      {
+        "type": "call",
+        "target": "endPanel",
+        "component": "RevealPanelController",
+        "method": "show",
+        "args": []
+      }
+    ]
+  }
+]
