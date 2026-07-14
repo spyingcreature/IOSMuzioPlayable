@@ -1,7 +1,6 @@
 import {
     _decorator,
     Component,
-    Label,
     Node,
     Rect,
     tween,
@@ -18,25 +17,24 @@ import type { MuzioPlaylistController } from './MuzioPlaylistController';
 
 const { ccclass, property } = _decorator;
 
+/**
+ * Sprite-only draggable song card.
+ *
+ * Prefab requirements:
+ * - Sprite on this node (or a child node) containing the complete song-card image.
+ * - UITransform on this node.
+ * - DraggableNode2D on this node.
+ * - PlaylistSongCard on this node.
+ *
+ * The song title and artist are already baked into the assigned SpriteFrame,
+ * so this component does not manage labels or text.
+ */
 @ccclass('PlaylistSongCard')
 export class PlaylistSongCard extends Component {
-    @property
-    public songId = '';
-
-    @property
-    public songTitle = '';
-
-    @property
-    public artistName = '';
-
-    @property
+    @property({
+        tooltip: 'Mood group this card belongs to: Relax, Energy, or Focus.',
+    })
     public mood = 'Relax';
-
-    @property({ type: Label })
-    public titleLabel: Label | null = null;
-
-    @property({ type: Label })
-    public artistLabel: Label | null = null;
 
     @property({ type: DraggableNode2D })
     public draggable: DraggableNode2D | null = null;
@@ -59,6 +57,11 @@ export class PlaylistSongCard extends Component {
 
     public get isAccepted(): boolean {
         return this._accepted;
+    }
+
+    /** Used by playlist events. Give the prefab/node a unique name in Cocos. */
+    public get cardId(): string {
+        return this.node.name;
     }
 
     private _controller: MuzioPlaylistController | null = null;
@@ -86,7 +89,7 @@ export class PlaylistSongCard extends Component {
         if (!this._originCaptured) {
             this.captureOrigin();
         }
-        this._applyText();
+
         this.setDragEnabled(false);
     }
 
@@ -153,6 +156,7 @@ export class PlaylistSongCard extends Component {
             this.node.setScale(this._originScale);
             return;
         }
+
         await this._animateLocal(
             Vec3.ZERO,
             this._originScale,
@@ -173,6 +177,7 @@ export class PlaylistSongCard extends Component {
         this.node.setSiblingIndex(
             Math.min(this._originSiblingIndex, this._originParent.children.length - 1),
         );
+
         await this._animateLocal(
             this._originPosition,
             this._originScale,
@@ -209,10 +214,12 @@ export class PlaylistSongCard extends Component {
             this._originScale.y * this.dragScale,
             this._originScale.z,
         );
+
         this._activeTween = tween(this.node)
             .to(0.1, { scale: targetScale }, { easing: 'sineOut' })
             .call(() => { this._activeTween = null; })
             .start();
+
         this._controller?.onCardDragStarted(this);
     }
 
@@ -260,21 +267,14 @@ export class PlaylistSongCard extends Component {
         if (!this._activeTween) {
             return;
         }
+
         this._activeTween.stop();
         this._activeTween = null;
+
         if (this._pendingTweenResolver) {
             const resolve = this._pendingTweenResolver;
             this._pendingTweenResolver = null;
             resolve();
-        }
-    }
-
-    private _applyText(): void {
-        if (this.titleLabel && this.songTitle) {
-            this.titleLabel.string = this.songTitle;
-        }
-        if (this.artistLabel && this.artistName) {
-            this.artistLabel.string = this.artistName;
         }
     }
 

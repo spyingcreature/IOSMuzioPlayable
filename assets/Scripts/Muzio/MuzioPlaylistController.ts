@@ -3,14 +3,14 @@ import {
     Component,
     Label,
     Node,
+    ProgressBar,
     Rect,
+    tween,
 } from 'cc';
-import { NodePopInOut } from '../Animation/NodePopInOut';
 import { RelativeScalePulser } from '../Animation/RelativeScalePulser';
 import { AudioManager } from '../Audio/AudioManager';
 import { OverlapMode, ViewportBounds } from '../Detection/ViewportBounds';
 import { ScenarioManager } from '../Presentation/ScenarioManager_Cocos388';
-import { SpriteFillProgressDisplay } from '../UI/SpriteFillProgressDisplay';
 import {
     MuzioMood,
     MuzioPlayableEvent,
@@ -50,9 +50,6 @@ export class MuzioPlaylistController extends Component {
     @property({ type: [Node] })
     public playlistSlots: Node[] = [];
 
-    @property({ type: [Node] })
-    public endCardSongSlots: Node[] = [];
-
     @property({ min: 1, max: 4, step: 1 })
     public requiredSongCount = 2;
 
@@ -77,14 +74,8 @@ export class MuzioPlaylistController extends Component {
     @property({ type: Node })
     public dragHintRoot: Node | null = null;
 
-    @property({ type: SpriteFillProgressDisplay })
-    public generationProgress: SpriteFillProgressDisplay | null = null;
-
-    @property({ type: Node })
-    public generatedBadgeRoot: Node | null = null;
-
-    @property({ type: NodePopInOut })
-    public generatedBadgePop: NodePopInOut | null = null;
+    @property({ type: ProgressBar })
+    public generationProgress: ProgressBar | null = null;
 
     @property({ type: AudioManager })
     public audioManager: AudioManager | null = null;
@@ -140,14 +131,9 @@ export class MuzioPlaylistController extends Component {
         if (this.dragHintRoot) {
             this.dragHintRoot.active = false;
         }
-        if (this.generatedBadgePop) {
-            this.generatedBadgePop.captureBaseScale();
-            this.generatedBadgePop.snapOut();
+        if (this.generationProgress) {
+            this.generationProgress.progress = 0;
         }
-        if (this.generatedBadgeRoot) {
-            this.generatedBadgeRoot.active = false;
-        }
-        this.generationProgress?.setProgress(0);
         this._updateLabels();
     }
 
@@ -235,7 +221,7 @@ export class MuzioPlaylistController extends Component {
         this._updateLabels();
 
         ScenarioManager.events.emit(MuzioPlayableEvent.SONG_ADDED, {
-            songId: card.songId || card.node.name,
+            songId: card.cardId,
             mood: this._selectedMood,
             count: this._acceptedCards.length,
             requiredCount,
@@ -250,56 +236,35 @@ export class MuzioPlaylistController extends Component {
             ScenarioManager.events.emit(MuzioPlayableEvent.PLAYLIST_READY, {
                 mood: this._selectedMood,
                 songIds: this._acceptedCards.map(
-                    (acceptedCard) => acceptedCard.songId || acceptedCard.node.name,
+                    (acceptedCard) => acceptedCard.cardId,
                 ),
             });
         }
     }
 
-    /** Scenario call action. It returns a Promise, so the ScenarioManager waits for it. */
+    /**
+     * Runs while the generating overlay is visible.
+     * The end card remains inactive during this method.
+     * Labels are prepared before the scenario activates the end card.
+     */
     public async generatePlaylist(): Promise<void> {
         this.disableSongDragging();
-        this.generationProgress?.setProgress(0);
 
         if (this.generationProgress) {
-            await this.generationProgress.animateProgressTo(
-                1,
-                0.65,
-                'sineInOut',
-                0,
-            );
+            this.generationProgress.progress = 0;
+            await this._animateProgressBar(this.generationProgress, 1, 0.65);
         } else {
             await this._wait(0.65);
         }
 
-        await this._moveCardsToEndCard();
         this._updateEndCardLabels();
-
-        if (this.generatedBadgeRoot) {
-            this.generatedBadgeRoot.active = true;
-        }
-        if (this.generatedBadgePop) {
-            await this.generatedBadgePop.popIn(true, 0.2, 'backOut');
-        }
 
         ScenarioManager.events.emit(MuzioPlayableEvent.PLAYLIST_GENERATED, {
             mood: this._selectedMood,
             songIds: this._acceptedCards.map(
-                (card) => card.songId || card.node.name,
+                (card) => card.cardId,
             ),
         });
-    }
-
-    private async _moveCardsToEndCard(): Promise<void> {
-        const jobs: Promise<void>[] = [];
-        for (let i = 0; i < this._acceptedCards.length; i += 1) {
-            const slot = this.endCardSongSlots[i];
-            if (!slot) {
-                continue;
-            }
-            jobs.push(this._acceptedCards[i].moveToEndSlot(slot));
-        }
-        await Promise.all(jobs);
     }
 
     private _canUseCard(card: PlaylistSongCard): boolean {
@@ -415,6 +380,32 @@ export class MuzioPlaylistController extends Component {
         if (safeKey && this.audioManager) {
             this.audioManager.playSfx(safeKey);
         }
+    }
+
+
+    private _animateProgressBar(
+        progressBar: ProgressBar,
+        targetProgress: number,
+        duration: number,
+    ): Promise<void> {
+        const safeTarget = Math.min(1, Math.max(0, targetProgress));
+        const safeDuration = Math.max(0, duration);
+
+        if (safeDuration <= 0) {
+            progressBar.progress = safeTarget;
+            return Promise.resolve();
+        }
+
+        return new Promise<void>((resolve) => {
+            tween(progressBar)
+                .to(
+                    safeDuration,
+                    { progress: safeTarget },
+                    { easing: 'sineInOut' },
+                )
+                .call(resolve)
+                .start();
+        });
     }
 
     private _wait(seconds: number): Promise<void> {

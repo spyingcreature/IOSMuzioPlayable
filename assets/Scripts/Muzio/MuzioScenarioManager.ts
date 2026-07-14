@@ -8,8 +8,6 @@ import { MuzioPlayableEvent } from './MuzioPlayableEvents';
 const { ccclass } = _decorator;
 
 /**
- * Code-defined playable flow using the supplied ScenarioManager.
- *
  * Required entity keys:
  * moodScreen, moodController, songScreen, playlistController,
  * generatingOverlay, endCard, endCardPop, ctaPulse.
@@ -114,14 +112,12 @@ export class MuzioScenarioManager extends ScenarioManager {
                         method: 'disableSongDragging',
                     },
                     { type: 'enable', target: 'generatingOverlay', value: true },
-                    { type: 'enable', target: 'endCard', value: true },
                     {
                         type: 'call',
                         target: 'playlistController',
                         component: 'MuzioPlaylistController',
                         method: 'generatePlaylist',
                     },
-                    { type: 'wait', duration: 0.1 },
                     { type: 'enable', target: 'generatingOverlay', value: false },
                     { type: 'enable', target: 'songScreen', value: false },
                 ],
